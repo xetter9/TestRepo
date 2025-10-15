@@ -43,11 +43,13 @@ public class KafkaController {
         Order order = new Order("O1001", 250.75);
         orderKafkaTemplate.send("test-topic", order);    
     }
-
 @PostMapping("/upload")
-public ResponseEntity<String> uploadImage(@RequestBody ImageMessage message) throws IOException {
-    Path path = Paths.get(message.getFilename());
-    Files.write(path, Base64.getDecoder().decode(message.getData()));
+public ResponseEntity<String> uploadImage(
+        @RequestParam("filename") String filename,
+        @RequestParam("file") MultipartFile file) throws IOException {
+
+    Path path = Paths.get("/var/" + filename);
+    Files.write(path, file.getBytes());
     return ResponseEntity.ok("✅ Saved to " + path);
 }
 
